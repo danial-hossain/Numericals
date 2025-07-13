@@ -12,6 +12,7 @@ double root(double x, double y)
 }
 int main()
 {
+        cout << fixed << setprecision(10);
     //  cout << fixed << setprecision(6);
     //  double x = -0.1, y = 1;-->nnegative root
     //    double x = 0.1, y = 1.2; -->0.142 root
@@ -40,7 +41,7 @@ int main()
     cout << "No|| " << " lower_limit  ||" << " upper_limit   ||" << " Approx Root ||" << " Prev Approx Root ||" << " Abs. Relative Error || " << "Update " << endl;
     cout << "-------------------------------------------------------------------------------------" << endl;
     int step = 1;
-    while (relative_error > tolerance)
+    while (relative_error > tolerance || abs(equation(mid)) > tolerance)
 
     {
         if (p)

@@ -43,19 +43,19 @@ int main()
     {
         if (p)
         {
-           
+            cout << step << "||" << "      " << x << "||" << "       " << y ;
             if (equation(x) * equation(root(x, y)) < 0)
             {
                 y = root(x, y);
-                cout << endl;
+              
             }
             else if (equation(x) * equation(root(x, y)) > 0)
             {
                 x = root(x, y);
-                cout << endl;
+               
             }
             relative_error = abs((root(x, y) - root_prev) / (root(x, y)));
-             cout << step << "||" << "      " << x << "||" << "       " << y << "||" << "         " << root(x, y) << "||" << "       " << root_prev << "||" << "      " << relative_error << endl;
+             cout << "||" << "         " << root(x, y) << "||" << "       " << root_prev << "||" << "      " << relative_error << endl;
             root_prev = root(x, y);
             step++;
           

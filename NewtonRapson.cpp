@@ -29,7 +29,7 @@ int main()
     But Newton-Raphson typically starts with just one guess.
     You can choose that based on graph, or from interval [a, b] where f(a)*f(b)<0 like in Bisection.
     */
-    float x=0;
+    float x=1.5;
     float tolerance = 0.00001;
     float relative_error = 1;
     float root_prev = x;
