@@ -1,54 +1,63 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-double equation(double x) {
-    return pow(x, 4) + (1.33 * pow(10, cos(x * x))) - (1.6 * x * exp(x));
+double horners(int arr[], int degree, double x) {
+    double sum = arr[0];
+    for (int i = 1; i <= degree; i++) {
+        sum = sum * x + arr[i];
+    }
+    return sum;
 }
 
-double midpoint(double a, double b) {
-    return (a + b) / 2;
+double equation(double h) {
+    int degree = 3;
+    int arr[degree + 1] = {2, -7, 4, 1}; // Correct: 2h³ - 7h² + 4h + 1
+    return horners(arr, degree, h);
+}
+
+double root(double x0, double x1) {
+    if (fabs(equation(x1) - equation(x0)) < 1e-12)
+        return x1;
+    return x1 - ((equation(x1) * (x1 - x0)) / (equation(x1) - equation(x0)));
 }
 
 int main() {
-    double x = 0.1, y = 1.2; // Initial interval
-    double tolerance = 0.00001;
-    double mid, root_prev;
+    double x0 = 1.5;
+    double x1 = 2.5, x2;
     double relative_error = 1.0;
-    int step = 1;
+    int steps = 0;
 
-    if (equation(x) * equation(y) >= 0) {
-        cout << "No root exists in the given interval." << endl;
-        return 0;
+    cout << fixed << setprecision(6);
+    cout << "************************************************************************************************" << endl;
+    cout << "Iteration ||     h0      ||     h1      ||    f(h1)    ||     h2      || Relative Error" << endl;
+
+    while (relative_error > 0.000001) {
+        x2 = root(x0, x1); // New approximation
+        steps++;
+
+        double fx1 = equation(x1);
+
+        cout << "    " << steps << "     ||  "
+             << x0 << "  ||  "
+             << x1 << "  ||  "
+             << fx1 << "  ||  "
+             << x2 << "  ||  ";
+
+        if (steps == 1)
+            cout << "N/A";
+        else
+            cout << fabs((x2 - x1) / x2);
+
+        cout << endl;
+
+        relative_error = fabs((x2 - x1) / x2);
+
+        x0 = x1;
+        x1 = x2;
     }
 
-    cout << "Inputs are okay. Root exists in [" << x << ", " << y << "]" << endl;
-    cout << "-----------------------------------------------------------------------------------------" << endl;
-    cout << "Step | Lower Limit | Upper Limit | Approx Root | Prev Root | Relative Error | Update" << endl;
-    cout << "-----------------------------------------------------------------------------------------" << endl;
-
-    root_prev = midpoint(x, y); // Initialize previous root
-
-    while (relative_error > tolerance &&   abs(equation(mid)) > tolerance) { // Prevent infinite loop
-        mid = midpoint(x, y);
-
-        cout << step << " | " << x << " | " << y << " | " << mid << " | " << root_prev << " | " << relative_error << " | ";
-
-        if (equation(x) * equation(mid) < 0) {
-            y = mid;
-            cout << "mid -> upper_limit" << endl;
-        } else {
-            x = mid;
-            cout << "mid -> lower_limit" << endl;
-        }
-
-        relative_error = abs((mid - root_prev) / mid);
-        root_prev = mid;
-        step++;
-    }
-
-    cout << "-----------------------------------------------------------------------------------------" << endl;
-    cout << "Final Root (approx): " << mid << endl;
-    cout << "Function value at root: " << equation(mid) << endl;
+    cout << "************************************************************************************************" << endl;
+    cout << "Final depth (approx): " << x1 << " meters" << endl;
 
     return 0;
 }
