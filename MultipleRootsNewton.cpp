@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-float equation(float x, vector<float> arr, int size)
+float equation(float x, const vector<float>& arr, int size)
 {
     float sum = 0;
     for (int i = size - 1; i >= 0; i--)
@@ -11,7 +11,7 @@ float equation(float x, vector<float> arr, int size)
     return sum;
 }
 
-float differentiation(float x, vector<float> arr, int size)
+float differentiation(float x, const vector<float>& arr, int size)
 {
     float sum = 0;
     for (int i = size - 1; i >= 1; i--)
@@ -20,21 +20,26 @@ float differentiation(float x, vector<float> arr, int size)
     }
     return sum;
 }
+vector<float> syntheticDivision(const vector<float>& arr, float root)
+{
+    int size = arr.size();
+    vector<float> newArr(size - 1);
+    float carry = arr[size - 1];
+
+    for (int i = size - 2; i >= 0; i--)
+    {
+        newArr[i] = carry;
+        carry = arr[i] + carry * root;
+    }
+
+    return newArr;
+}
+
 
 float root(float x, vector<float> arr, int size)
 {
     float r = x - (equation(x, arr, size) / differentiation(x, arr, size));
     return r;
-}
-
-vector<float> syntheticDivision(vector<float> arr, int size, float root)
-{
-    for (int i = size - 2; i >= 0; i--)
-    {
-        arr[i] = arr[i + 1] * root + arr[i];
-    }
-    arr.pop_back(); 
-    return arr;
 }
 
 float newton(float x, vector<float> arr, int size)
@@ -54,18 +59,19 @@ float newton(float x, vector<float> arr, int size)
 }
 
 
+
 int main()
 {
     int degree;
     cout << "Enter the highest degree of the polynomial: ";
     cin >> degree;
 
-    vector<float> coef(degree + 1); 
+    vector<float> coef(degree + 1);
 
     cout << "Enter the coefficients from highest degree to constant term:\n";
     for (int i = degree; i >= 0; i--)
     {
-        cin >> coef[i]; 
+        cin >> coef[i];
     }
 
     float initial_guess;
@@ -77,13 +83,12 @@ int main()
         float r = newton(initial_guess, coef, coef.size());
         cout << "Root found: " << r << endl;
 
-        coef = syntheticDivision(coef, coef.size(), r);
+        coef = syntheticDivision(coef, r);
 
-        // Update initial_guess for next root finding iteration
-        initial_guess = r;
+        initial_guess = r + 0.1f;
     }
 
-    cout << "Remaining constant: " << coef[0] << endl;
+
 
     return 0;
 }
